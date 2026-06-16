@@ -6,7 +6,197 @@ url = "https://zapengler.github.io/Peter_and_Stef_7_11_26/"
 img = qrcode.make(url)
 img.save("ps_qrcode.png")
 
+#### to push to github
+#cd C:\Users.... # navigate to correct folders
+#git add .
+#git commit -m "Added all games and secret page"
+#git push
+
 #### actually build html
+ 
+import json
+
+# ==========================================================
+#  EDITABLE CONFIG — Change your data here
+# ==========================================================
+
+SEATING_CHART = [
+    { "table": "1", "guests": "Mom & Dad Kraack, Grandma Kraack, Uncle Jim & Aunt Sue" },
+    { "table": "2", "guests": "Mom & Dad Engler, Grandma Engler, Cousin Mike" },
+    { "table": "3", "guests": "Sarah & Josh, Emily & Dave, Katie & Ryan" },
+    { "table": "4", "guests": "College Crew: Alex, Jordan, Taylor, Morgan" },
+    { "table": "5", "guests": "Work Friends: Pat, Brian, Nolan, Monte" },
+    { "table": "6", "guests": "High School Gang: Chris, Sam, Drew, Jamie" },
+]
+
+CODE_WORDS = [
+    "THUNDERBIRD", "ROYAL FLUSH", "BEAST MODE", "INVINCIBLE",
+    "MOONWALKER", "PEGASUS", "PHOENIX", "GOLDEN SNITCH",
+    "BRAVEHEART", "CHECKMATE", "WILDCARD", "IRON THRONE",
+]
+EASTER_EGG_CODE_WORD = "KONAMI"
+
+SCRAMBLE_WORDS = ["BOUQUET","WEDDING","FOREVER","DANCING","ROMANCE","FLOWERS","MARRIED","CHERISH","DEVOTED","PROMISE"]
+
+SPORTS_TRIVIA = [
+    # ===== SEAHAWKS =====
+    { "type":"mc", "q":"What number did Russell Wilson wear as a Seahawk?", "options":["1","3","7","12"], "answer":"3" },
+    { "type":"mc", "q":"Who coached the Seahawks to their Super Bowl XLVIII victory?", "options":["Mike Holmgren","Pete Carroll","Chuck Knox","Jim Mora"], "answer":"Pete Carroll" },
+    { "type":"mc", "q":"Which team did the Seahawks defeat 43-8 in Super Bowl XLVIII?", "options":["Patriots","Broncos","49ers","Packers"], "answer":"Broncos" },
+    { "type":"open", "q":"What is the nickname for the Seahawks' fanbase?", "answers":["12s","12th man","the 12s","the 12th man"] },
+    { "type":"mc", "q":"Which Seahawk was nicknamed 'Beast Mode'?", "options":["Russell Wilson","Marshawn Lynch","Kam Chancellor","Earl Thomas"], "answer":"Marshawn Lynch" },
+    { "type":"open", "q":"What division do the Seahawks play in?", "answers":["nfc west"] },
+    { "type":"mc", "q":"Which Seahawk made 'The Tip' in the 2013 NFC Championship?", "options":["Richard Sherman","Brandon Browner","Byron Maxwell","Earl Thomas"], "answer":"Richard Sherman" },
+    { "type":"mc", "q":"What year were the Seattle Seahawks founded?", "options":["1970","1976","1980","1984"], "answer":"1976" },
+    { "type":"open", "q":"What is the name of the Seahawks' stadium?", "answers":["lumen field","centurylink field"] },
+    { "type":"mc", "q":"Which Seahawk safety was known as 'Bam Bam'?", "options":["Earl Thomas","Kam Chancellor","Quandre Diggs","Jamal Adams"], "answer":"Kam Chancellor" },
+    { "type":"mc", "q":"Who did the Seahawks lose to in Super Bowl XL?", "options":["Colts","Patriots","Steelers","Bears"], "answer":"Steelers" },
+    { "type":"streak", "q":"Name 4 Seahawks players (past or current) without getting one wrong.", "needed":4,
+      "valid":["wilson","lynch","sherman","chancellor","thomas","wagner","lockett","metcalf","dk","largent","alexander","hasselbeck","tatupu","wright","bennett","avril","baldwin","graham","carson","penny","fan","jones","brooks","green","kennedy","easley","warner","krieg","mack","smith","geno","walker","witherspoon","woolen","cross","lucas"],
+    },
+
+    # ===== ARSENAL =====
+    { "type":"mc", "q":"What is Arsenal's home stadium?", "options":["Wembley","Stamford Bridge","Emirates Stadium","Etihad Stadium"], "answer":"Emirates Stadium" },
+    { "type":"mc", "q":"Who is Arsenal's all-time leading scorer?", "options":["Dennis Bergkamp","Thierry Henry","Ian Wright","Robin van Persie"], "answer":"Thierry Henry" },
+    { "type":"open", "q":"What is Arsenal's nickname?", "answers":["gunners","the gunners"] },
+    { "type":"mc", "q":"In what season did Arsenal go unbeaten in the Premier League?", "options":["2001-02","2003-04","2005-06","2007-08"], "answer":"2003-04" },
+    { "type":"mc", "q":"What part of London is Arsenal based in?", "options":["South London","East London","West London","North London"], "answer":"North London" },
+    { "type":"open", "q":"What was Arsenal's stadium before the Emirates?", "answers":["highbury","arsenal stadium"] },
+    { "type":"mc", "q":"Which manager led Arsenal's 'Invincibles' season?", "options":["George Graham","Arsène Wenger","Unai Emery","Mikel Arteta"], "answer":"Arsène Wenger" },
+    { "type":"mc", "q":"What is Arsenal's rivalry with Tottenham called?", "options":["Manchester Derby","Merseyside Derby","North London Derby","London Derby"], "answer":"North London Derby" },
+    { "type":"mc", "q":"What color is Arsenal's traditional home shirt?", "options":["Blue","Red","Yellow","Green"], "answer":"Red" },
+    { "type":"streak", "q":"Name 3 Arsenal players (past or current) without getting one wrong.", "needed":3,
+      "valid":["henry","bergkamp","wright","vieira","pires","adams","saka","odegaard","saliba","rice","havertz","ramsdale","martinelli","nketiah","arteta","ozil","sanchez","fabregas","van persie","walcott","giroud","koscielny","mertesacker","cazorla","wilshere","ramsey","aubameyang","lacazette","lehmann","seaman","campbell","ljungberg","petit","overmars","parlour","keown","dixon","winterburn","smith","rocastle","brady","george"],
+    },
+
+    # ===== NFL GENERAL =====
+    { "type":"mc", "q":"How many teams are in the NFL?", "options":["28","30","32","36"], "answer":"32" },
+    { "type":"mc", "q":"How long is an NFL football field in yards?", "options":["80","90","100","120"], "answer":"120" },
+    { "type":"open", "q":"What is the name of the NFL's championship game?", "answers":["super bowl","the super bowl"] },
+    { "type":"mc", "q":"How many points is a field goal worth?", "options":["1","2","3","6"], "answer":"3" },
+    { "type":"mc", "q":"How many players per team are on the field during a play?", "options":["9","10","11","12"], "answer":"11" },
+    { "type":"open", "q":"What position is abbreviated 'QB'?", "answers":["quarterback"] },
+    { "type":"mc", "q":"How many minutes are in each quarter of an NFL game?", "options":["10","12","15","20"], "answer":"15" },
+    { "type":"mc", "q":"How many points is a safety worth?", "options":["1","2","3","6"], "answer":"2" },
+    { "type":"open", "q":"What do the letters 'NFL' stand for?", "answers":["national football league"] },
+    { "type":"mc", "q":"How many regular season games does each NFL team play?", "options":["14","16","17","18"], "answer":"17" },
+
+    # ===== SOCCER =====
+    { "type":"mc", "q":"How many players per team on a soccer field?", "options":["7","9","11","13"], "answer":"11" },
+    { "type":"open", "q":"What is the governing body of international soccer?", "answers":["fifa"] },
+    { "type":"mc", "q":"Which country hosted the 2022 FIFA World Cup?", "options":["Saudi Arabia","UAE","Qatar","Bahrain"], "answer":"Qatar" },
+    { "type":"mc", "q":"How long is a standard soccer match in regulation?", "options":["60 minutes","80 minutes","90 minutes","120 minutes"], "answer":"90 minutes" },
+    { "type":"open", "q":"What is it called when a player scores three goals in one match?", "answers":["hat trick","hat-trick","hattrick"] },
+    { "type":"mc", "q":"Which player has won the most Ballon d'Or awards?", "options":["Cristiano Ronaldo","Lionel Messi","Pelé","Johan Cruyff"], "answer":"Lionel Messi" },
+    { "type":"open", "q":"What position is the only one allowed to use hands in the penalty area?", "answers":["goalkeeper","goalie","keeper","gk"] },
+    { "type":"mc", "q":"Which country has won the most FIFA World Cups?", "options":["Germany","Brazil","Italy","Argentina"], "answer":"Brazil" },
+    { "type":"mc", "q":"How many substitutions are allowed in a standard FIFA match?", "options":["3","4","5","6"], "answer":"5" },
+    { "type":"streak", "q":"Name 3 countries that have won a FIFA World Cup without getting one wrong.", "needed":3,
+      "valid":["brazil","germany","italy","argentina","france","uruguay","england","spain"],
+    },
+
+    # ===== ULTIMATE FRISBEE =====
+    { "type":"mc", "q":"How many players per team are on the field in ultimate?", "options":["5","6","7","9"], "answer":"7" },
+    { "type":"open", "q":"What disc brand is the standard for competitive ultimate?", "answers":["discraft","ultrastar","discraft ultrastar"] },
+    { "type":"mc", "q":"What is the self-officiating principle in ultimate called?", "options":["Fair Play","Honor Code","Spirit of the Game","Integrity Rule"], "answer":"Spirit of the Game" },
+    { "type":"mc", "q":"What must you do when you catch the disc in ultimate?", "options":["Take 3 steps","Stop and establish a pivot","Pass within 5 seconds","Call a timeout"], "answer":"Stop and establish a pivot" },
+    { "type":"open", "q":"What is the scoring area in ultimate called?", "answers":["end zone","endzone","the end zone"] },
+    { "type":"mc", "q":"How is a point started in ultimate?", "options":["A kickoff","A pull","A throw-in","A face-off"], "answer":"A pull" },
+    { "type":"mc", "q":"In standard USAU club play, how many points to win?", "options":["11","13","15","21"], "answer":"15" },
+    { "type":"open", "q":"What happens when a pass hits the ground in ultimate?", "answers":["turnover","it's a turnover","change of possession"] },
+    
+    # ===== SOFTBALL =====
+    { "type":"mc", "q":"How many players are on the field for a softball team on defense?", "options":["7","9","10","11"], "answer":"9" },
+    { "type":"mc", "q":"What is the distance between bases in college softball?", "options":["60 feet","70 feet","80 feet","90 feet"], "answer":"60 feet" },
+    { "type":"open", "q":"What style of pitching is used in softball?", "answers":["underhand","windmill","underarm"] },
+    { "type":"mc", "q":"How many innings are in a regulation college softball game?", "options":["5","7","9","6"], "answer":"7" },
+    { "type":"mc", "q":"What is the pitching distance in college softball?", "options":["35 feet","40 feet","43 feet","46 feet"], "answer":"43 feet" },
+    { "type":"mc", "q":"What is the mercy rule run differential in college softball after 5 innings?", "options":["6 runs","8 runs","10 runs","12 runs"], "answer":"8 runs" },
+    { "type":"open", "q":"What is a softball's circumference: 11 inches or 12 inches?", "answers":["12","12 inches"] },
+    { "type":"mc", "q":"What is it called when a batter bunts to advance a runner but is thrown out?", "options":["Squeeze play","Sacrifice bunt","Hit and run","Safety squeeze"], "answer":"Sacrifice bunt" },
+    { "type":"streak", "q":"Name 3 softball positions without getting one wrong.", "needed":3,
+      "valid":["pitcher","catcher","first base","second base","shortstop","third base","left field","center field","right field","first baseman","second baseman","third baseman","left fielder","center fielder","right fielder","1b","2b","3b","ss","lf","cf","rf","p","c","dp","flex"],
+    },
+    { "type":"mc", "q":"What color is a standard softball?", "options":["White","Yellow","Orange","Red"], "answer":"Yellow" },
+]
+
+COUPLE_TRIVIA = [
+    { "type":"mc", "q":"Where did Stefanie & Peter meet?", "options":["College","Work","High School","A wedding"], "answer":"College" },
+    { "type":"mc", "q":"What is Peter's favorite sport?", "options":["Basketball","Football","Baseball","Hockey"], "answer":"Football" },
+    { "type":"open", "q":"What city is the wedding in?", "answers":["mount airy"] },
+    { "type":"open", "q":"What month is the wedding?", "answers":["july"] },
+    { "type":"mc", "q":"Who proposed?", "options":["Stefanie","Peter","Both","Neither"], "answer":"Peter" },
+    { "type":"streak", "q":"Name 2 members of the wedding party without getting one wrong.", "needed":2,
+      "valid":["placeholder1","placeholder2","placeholder3","placeholder4"],
+    },
+    
+    # ===== QUEENS UNIVERSITY OF CHARLOTTE =====
+    { "type":"open", "q":"What is the nickname of Queens University of Charlotte's athletic teams?", "answers":["royals","the royals"] },
+    { "type":"mc", "q":"What is Queens University's mascot's name?", "options":["Roary","Rex","King","Leo"], "answer":"Rex" },
+    { "type":"mc", "q":"What conference do the Queens Royals compete in?", "options":["Big South","Southern","ASUN","Sun Belt"], "answer":"ASUN" },
+    { "type":"mc", "q":"What are Queens University's school colors?", "options":["Red and white","Navy blue and vegas gold","Purple and silver","Green and gold"], "answer":"Navy blue and vegas gold" },
+    { "type":"open", "q":"What city is Queens University located in?", "answers":["charlotte"] },
+    { "type":"mc", "q":"What year was Queens University of Charlotte founded?", "options":["1837","1857","1877","1897"], "answer":"1857" },
+    { "type":"mc", "q":"What NCAA division do the Queens Royals compete in?", "options":["Division I","Division II","Division III","NAIA"], "answer":"Division I" },
+    { "type":"mc", "q":"What is the name of Queens' basketball arena?", "options":["Rex Arena","Levine Center","Curry Arena","Royal Court"], "answer":"Curry Arena" },
+    { "type":"open", "q":"What animal is Rex, the Queens mascot?", "answers":["lion","a lion"] },
+    { "type":"mc", "q":"In 2026, Queens men's basketball made the NCAA Tournament in their first year of DI eligibility. Who did they beat in the conference tournament final?", "options":["Kennesaw State","Lipscomb","Central Arkansas","Jacksonville"], "answer":"Central Arkansas" },
+]
+
+CONNECTIONS_PUZZLES = [
+    {
+        "groups": [
+            {"category": "Wedding Flowers", "words": ["ROSE", "LILY", "PEONY", "TULIP"], "color": "#667D5D"},
+            {"category": "Football Positions", "words": ["SAFETY", "GUARD", "CENTER", "TACKLE"], "color": "#8B7355"},
+            {"category": "At the Reception", "words": ["TOAST", "CAKE", "BOUQUET", "DANCE"], "color": "#5B7B8A"},
+            {"category": "NC Cities", "words": ["CHARLOTTE", "RALEIGH", "DURHAM", "BOONE"], "color": "#9B6B8A"},
+        ]
+    },
+    {
+        "groups": [
+            {"category": "Seahawks Legends", "words": ["LYNCH", "SHERMAN", "WAGNER", "LARGENT"], "color": "#667D5D"},
+            {"category": "Dances", "words": ["WALTZ", "SALSA", "SWING", "TANGO"], "color": "#8B7355"},
+            {"category": "Gems", "words": ["RUBY", "PEARL", "EMERALD", "DIAMOND"], "color": "#5B7B8A"},
+            {"category": "Music Genres", "words": ["JAZZ", "BLUES", "ROCK", "COUNTRY"], "color": "#9B6B8A"},
+        ]
+    },
+    {
+        "groups": [
+            {"category": "___ Ring", "words": ["BOXING", "WEDDING", "TREE", "ONION"], "color": "#667D5D"},
+            {"category": "Shades of Green", "words": ["SAGE", "LIME", "JADE", "OLIVE"], "color": "#8B7355"},
+            {"category": "Soccer Terms", "words": ["CORNER", "PITCH", "HEADER", "VOLLEY"], "color": "#5B7B8A"},
+            {"category": "Venues", "words": ["BARN", "CHURCH", "GARDEN", "BEACH"], "color": "#9B6B8A"},
+        ]
+    },
+]
+
+TTAL_QUESTIONS = [
+    # PLACEHOLDER — swap with real facts
+    {"statements": ["Peter played ultimate frisbee in college", "Stefanie studied abroad in Italy", "The couple's first date was bowling"], "lie": 2},
+    {"statements": ["The couple has a dog", "Peter's favorite food is sushi", "Stefanie once ran a marathon"], "lie": 1},
+    {"statements": ["The wedding cake is chocolate", "Mount Airy inspired Mayberry from Andy Griffith", "The couple got engaged in Paris"], "lie": 0},
+    {"statements": ["Peter has been to all 32 NFL stadiums", "Stefanie's favorite color is green", "The couple met at Queens University"], "lie": 0},
+    {"statements": ["The best man is Peter's brother", "Stefanie's middle name is Marie", "The couple's song is by Ed Sheeran"], "lie": 1},
+    {"statements": ["Peter can juggle", "The couple's first trip was to the mountains", "Stefanie played volleyball in high school"], "lie": 0},
+    {"statements": ["The rehearsal dinner is at a vineyard", "Peter proposed on a Tuesday", "Stefanie's favorite holiday is Christmas"], "lie": 1},
+    {"statements": ["The couple has matching tattoos", "Peter's favorite movie is The Dark Knight", "Mount Airy is in Surry County NC"], "lie": 0},
+    {"statements": ["Stefanie was in Alpha Delta Pi", "Peter worked for the Seahawks", "The couple honeymooned in Greece"], "lie": 2},
+    {"statements": ["The wedding colors include sage green", "Peter once caught a foul ball at a game", "Stefanie has never been on a cruise"], "lie": 1},
+]
+
+OVERUNDER_QUESTIONS = [
+    # PLACEHOLDER — swap with real values
+    {"q": "Number of guests at this wedding", "number": 150, "answer": "over"},
+    {"q": "Miles from Charlotte to Mount Airy", "number": 100, "answer": "over"},
+    {"q": "Seahawks Super Bowl wins", "number": 2, "answer": "under"},
+    {"q": "Number of groomsmen", "number": 5, "answer": "under"},
+    {"q": "Days the couple dated before getting engaged", "number": 1000, "answer": "over"},
+    {"q": "Songs on the wedding playlist", "number": 75, "answer": "over"},
+    {"q": "States Stefanie has visited", "number": 30, "answer": "under"},
+    {"q": "NFL teams that have never won a Super Bowl", "number": 10, "answer": "over"},
+    {"q": "Age Peter was at his first NFL game", "number": 15, "answer": "under"},
+    {"q": "Countries the couple has visited together", "number": 5, "answer": "under"},
+]
 
 html_content = r'''<!DOCTYPE html>
 <html lang="en">
@@ -95,7 +285,43 @@ html_content = r'''<!DOCTYPE html>
         .card.flipped, .card.matched { background: #ffffff; color: #21201f; border: 2px solid #667D5D; }
         .card.matched { cursor: default; }
 
-        /* --- Word Scramble --- */
+        /* --- Game Rows on Home --- */
+        .game-row {
+            display: flex; align-items: center; justify-content: center; gap: 0; width: 100%;
+            }
+        .game-row-spacer {
+            width: 70px; flex-shrink: 0;
+            }
+        .completion-info {
+            width: 70px; flex-shrink: 0; font-size: 13px; color: #667D5D; text-align: left;
+            font-family: circular, helvetica, sans-serif; padding-left: 10px;
+            }
+        .btn.completed {
+            background: #b5c4af; color: #fff;
+            }
+        .btn.completed:hover { background: #a0b399; }
+                              
+        /* --- Trivia --- */
+        .trivia-question {
+            font-family: 'Libre Baskerville', serif; font-size: 18px;
+            color: #21201f; margin: 20px 0 15px; line-height: 1.5; min-height: 50px;
+            }
+        .trivia-answers { display: flex; flex-direction: column; align-items: center; gap: 8px; width: 100%; }
+        .trivia-answers .btn { min-width: 280px; font-family: circular, helvetica, sans-serif; font-size: 14px; }
+        .trivia-input {
+            padding: 12px 20px; font-size: 16px; border: 2px solid #e8ece6;
+            border-radius: 6px; text-align: center; width: 280px;
+            font-family: circular, helvetica, sans-serif; color: #21201f; outline: none;
+            }
+        .trivia-input:focus { border-color: #667D5D; }
+        .trivia-feedback { font-size: 14px; min-height: 22px; margin-top: 10px; color: #c0392b; }
+        .trivia-feedback.correct { color: #667D5D; }
+        .trivia-streak-prompt { font-size: 14px; color: #888; margin-bottom: 8px; }
+        .trivia-consecutive {
+    font-size: 13px; color: #888; margin-bottom: 5px;
+    font-family: circular, helvetica, sans-serif;
+}
+.trivia-consecutive strong { color: #667D5D; }                       
         #scramble-display {
             font-family: 'Libre Baskerville', serif; font-size: 32px;
             letter-spacing: 6px; color: #667D5D; margin: 20px 0;
@@ -138,6 +364,65 @@ html_content = r'''<!DOCTYPE html>
         }
         .overlay-box h2 { margin-bottom: 8px; }
         .overlay-box p { color: #666; margin-bottom: 20px; font-size: 15px; }
+                        
+        /* --- Connections --- */
+#conn-solved { width: 100%; max-width: 380px; margin-bottom: 8px; }
+.conn-solved-bar {
+    width: 100%; padding: 10px; border-radius: 6px; margin-bottom: 6px;
+    color: #fff; text-align: center;
+}
+.conn-solved-bar .conn-cat { font-weight: 700; font-size: 14px; }
+.conn-solved-bar .conn-words { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+#conn-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px;
+    width: 100%; max-width: 380px; margin-bottom: 10px;
+}
+.conn-tile {
+    padding: 14px 4px; background: #e8ece6; border: 2px solid transparent;
+    border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;
+    text-transform: uppercase; transition: all 0.15s;
+    font-family: circular, helvetica, sans-serif; color: #21201f;
+}
+.conn-tile:hover { background: #dce3d9; }
+.conn-tile.selected { background: #667D5D; color: #fff; border-color: #576e4f; }
+#conn-actions { display: flex; gap: 8px; margin-bottom: 6px; }
+
+/* --- Two Truths and a Lie --- */
+.ttal-statements { display: flex; flex-direction: column; align-items: center; gap: 10px; width: 100%; margin: 15px 0; }
+.ttal-btn {
+    width: 100%; max-width: 340px; padding: 14px 16px; font-size: 14px;
+    background: #e8ece6; border: 2px solid transparent; border-radius: 6px;
+    cursor: pointer; text-align: left; transition: all 0.15s;
+    font-family: circular, helvetica, sans-serif; color: #21201f; line-height: 1.4;
+}
+.ttal-btn:hover { background: #dce3d9; }
+.ttal-btn.correct { background: #667D5D; color: #fff; border-color: #576e4f; }
+.ttal-btn.wrong { background: #c0392b; color: #fff; border-color: #a93226; }
+.ttal-btn.reveal { background: #c0392b; color: #fff; border-color: #a93226; opacity: 0.7; }
+
+/* --- Over/Under --- */
+.ou-number {
+    font-family: 'Libre Baskerville', serif; font-size: 42px;
+    color: #667D5D; font-weight: 700; margin: 10px 0;
+}
+.ou-question {
+    font-size: 16px; color: #21201f; margin-bottom: 5px; line-height: 1.5;
+}
+.ou-buttons { display: flex; gap: 12px; margin-top: 15px; }
+.ou-buttons .btn { min-width: 120px; }
+        
+        /* --- Secret Page --- */
+.secret-btn {
+    display: none; margin-top: 8px;
+}
+.secret-btn.visible { display: inline-block; }
+.code-word {
+    font-family: 'Libre Baskerville', serif; font-size: 36px;
+    color: #667D5D; font-weight: 700; margin: 25px 0; letter-spacing: 4px;
+}
+.secret-text {
+    color: #555; font-size: 15px; line-height: 1.7; margin-bottom: 20px;
+}
 
         /* --- Lock icon --- */
         .lock-label { display: block; font-size: 12px; color: #aaa; margin-top: 4px; }
@@ -147,12 +432,47 @@ html_content = r'''<!DOCTYPE html>
 
 <!-- ==================== HOME SCREEN ==================== -->
 <div id="home" class="screen active">
-    <h1>Stefanie & Peter</h1>
+    <h1>Stefanie & Pet<span id="secret-e" style="cursor:default">e</span>r</h1>
     <div class="subtitle">July 11, 2026 &middot; Mount Airy, NC</div>
     <div class="welcome">Welcome! Play a game to unlock the seating chart. Choose any game below — you only need to win once.</div>
-    <button class="btn" onclick="showScreen('puzzle')">&#129513; Sliding Puzzle</button>
-    <button class="btn" onclick="showScreen('memory')">&#127183; Memory Match</button>
-    <button class="btn" onclick="showScreen('scramble')">&#128221; Word Scramble</button>
+    <div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-puzzle" onclick="showScreen('puzzle')">&#129513; Sliding Puzzle</button>
+    <span class="completion-info" id="info-puzzle"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-connections" onclick="showScreen('connections')">&#129513; Connections</button>
+    <span class="completion-info" id="info-connections"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-trivia-sports" onclick="showScreen('trivia-sports')">&#127944; Trivia (Sports)</button>
+    <span class="completion-info" id="info-trivia-sports"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-trivia-couple" onclick="showScreen('trivia-couple')">&#128152; Trivia (Couple)</button>
+    <span class="completion-info" id="info-trivia-couple"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-overunder" onclick="showScreen('overunder')">&#127922; Over / Under</button>
+    <span class="completion-info" id="info-overunder"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-ttal" onclick="showScreen('ttal')">&#129300; Two Truths & a Lie</button>
+    <span class="completion-info" id="info-ttal"></span>
+</div>
+<div class="game-row">
+    <span class="game-row-spacer"></span>
+    <button class="btn" id="btn-scramble" onclick="showScreen('scramble')">&#128221; Word Scramble</button>
+    <span class="completion-info" id="info-scramble"></span>
+</div>
+    <div style="margin-top: 8px;">
+    <button class="btn secret-btn" id="btn-secret" onclick="showScreen('secret')">&#127942; Secret Page</button>
+    </div>
     <div style="margin-top: 15px;">
         <button id="seating-btn" class="btn disabled" onclick="goSeating()" disabled>
             &#128274; View Seating Chart
@@ -170,13 +490,26 @@ html_content = r'''<!DOCTYPE html>
     <button class="btn btn-small" style="margin-top:15px;" onclick="shufflePuzzle()">Shuffle</button>
 </div>
 
-<!-- ==================== MEMORY MATCH ==================== -->
-<div id="memory" class="screen">
+<!-- ==================== TRIVIA (SPORTS) ==================== -->
+<div id="trivia-sports" class="screen">
     <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
-    <h2>Memory Match</h2>
-    <div id="memory-moves" class="game-info">Moves: 0</div>
-    <div id="memory-grid"></div>
-    <button class="btn btn-small" style="margin-top:10px;" onclick="initMemory()">Reset</button>
+    <h2>Sports Trivia</h2>
+    <div class="game-info" id="trivia-sports-progress">Correct: 0 / 3</div>
+<div class="trivia-consecutive" id="trivia-sports-consecutive"></div>
+    <div class="trivia-question" id="trivia-sports-question"></div>
+    <div class="trivia-answers" id="trivia-sports-answers"></div>
+    <div class="trivia-feedback" id="trivia-sports-feedback"></div>
+</div>
+
+<!-- ==================== TRIVIA (COUPLE) ==================== -->
+<div id="trivia-couple" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
+    <h2>Couple Trivia</h2>
+    <div class="game-info" id="trivia-couple-progress">Correct: 0 / 3</div>
+<div class="trivia-consecutive" id="trivia-couple-consecutive"></div>
+    <div class="trivia-question" id="trivia-couple-question"></div>
+    <div class="trivia-answers" id="trivia-couple-answers"></div>
+    <div class="trivia-feedback" id="trivia-couple-feedback"></div>
 </div>
 
 <!-- ==================== WORD SCRAMBLE ==================== -->
@@ -193,31 +526,85 @@ html_content = r'''<!DOCTYPE html>
     </div>
 </div>
 
+<!-- ==================== CONNECTIONS ==================== -->
+<div id="connections" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
+    <h2>Connections</h2>
+    <div class="game-info" id="conn-info">Find 4 groups of 4</div>
+    <div id="conn-solved"></div>
+    <div id="conn-grid"></div>
+    <div id="conn-actions">
+        <button class="btn btn-small" onclick="connDeselect()">Deselect All</button>
+        <button class="btn btn-small" id="conn-submit" onclick="connSubmit()" disabled>Submit</button>
+    </div>
+    <div class="trivia-feedback" id="conn-feedback"></div>
+    <button class="btn btn-small" style="margin-top:8px;" onclick="initConnections()">New Puzzle</button>
+</div>
+
+<!-- ==================== TWO TRUTHS AND A LIE ==================== -->
+<div id="ttal" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
+    <h2>Two Truths & a Lie</h2>
+    <div class="game-info" id="ttal-progress">Correct: 0 / 3</div>
+    <div class="game-info" id="ttal-prompt">Tap the lie!</div>
+    <div class="ttal-statements" id="ttal-statements"></div>
+    <div class="trivia-feedback" id="ttal-feedback"></div>
+    <button class="btn btn-small" id="ttal-skip" style="background:#ccc;color:#666;margin-top:8px;" onclick="skipTTAL()">Skip</button>
+</div>
+
+<!-- ==================== OVER / UNDER ==================== -->
+<div id="overunder" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
+    <h2>Over / Under</h2>
+    <div class="game-info" id="ou-progress">Correct: 0 / 3</div>
+    <div class="trivia-consecutive" id="ou-consecutive"></div>
+    <div class="ou-question" id="ou-question"></div>
+    <div class="ou-number" id="ou-number"></div>
+    <div class="ou-buttons">
+        <button class="btn" onclick="answerOU('over')">&#9650; Over</button>
+        <button class="btn" onclick="answerOU('under')">&#9660; Under</button>
+    </div>
+    <div class="trivia-feedback" id="ou-feedback"></div>
+    <button class="btn btn-small" id="ou-skip" style="background:#ccc;color:#666;margin-top:8px;" onclick="skipOU()">Skip</button>
+</div>
+
 <!-- ==================== SEATING CHART ==================== -->
 <div id="seating" class="screen">
     <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
     <h2>Seating Chart</h2>
     <p style="color:#666; margin-bottom:15px;">Find your table below!</p>
-    <table class="seating-table">
-        <thead>
-            <tr><th>Table</th><th>Guests</th></tr>
-        </thead>
-        <tbody>
-            <tr><td>1</td><td>Mom & Dad Kraack, Grandma Kraack, Uncle Jim & Aunt Sue</td></tr>
-            <tr><td>2</td><td>Mom & Dad Engler, Grandma Engler, Cousin Mike</td></tr>
-            <tr><td>3</td><td>Sarah & Josh, Emily & Dave, Katie & Ryan</td></tr>
-            <tr><td>4</td><td>College Crew: Alex, Jordan, Taylor, Morgan</td></tr>
-            <tr><td>5</td><td>Work Friends: Pat, Brian, Nolan, Monte</td></tr>
-            <tr><td>6</td><td>High School Gang: Chris, Sam, Drew, Jamie</td></tr>
-        </tbody>
-    </table>
+    <table class="seating-table" id="seating-table-body">
+    <thead><tr><th>Table</th><th>Guests</th></tr></thead>
+    <tbody></tbody>
+</table>
+</div>
+
+<!-- ==================== SECRET PAGE ==================== -->
+<div id="secret" class="screen">
+    <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
+    <h2>&#127942; Secret Page</h2>
+    <div class="secret-text">
+        Congratulations, you've beaten the game. Peter owes you $20 — tell him the code word below during the reception to claim it.
+    </div>
+    <div class="code-word" id="secret-code-word"></div>
+    <button class="btn btn-small" onclick="showScreen('home')">Home</button>
+</div>
+
+<!-- ==================== SECRET UNLOCK OVERLAY ==================== -->
+<div id="secret-overlay" class="overlay">
+    <div class="overlay-box">
+        <h2>&#128272; Secret Unlocked!</h2>
+        <p>You've unlocked a secret page.</p>
+        <button class="btn btn-small" onclick="showScreen('secret'); closeSecretOverlay();">View Secret Page</button>
+        <button class="btn btn-small" onclick="closeSecretOverlay();">Later</button>
+    </div>
 </div>
 
 <!-- ==================== WIN OVERLAY ==================== -->
 <div id="win-overlay" class="overlay">
     <div class="overlay-box">
         <h2>&#127881; You Won!</h2>
-        <p>Congratulations! The seating chart is now unlocked.</p>
+        <p id="win-overlay-text">Congratulations! The seating chart is now unlocked.</p>
         <button class="btn btn-small" id="overlay-replay" onclick="replayGame()">Play Again</button>
         <button class="btn btn-small" onclick="showScreen('home'); closeOverlay();">Home</button>
         <button class="btn btn-small" onclick="showScreen('seating'); closeOverlay();">View Seating Chart</button>
@@ -225,6 +612,22 @@ html_content = r'''<!DOCTYPE html>
 </div>
 
 <script>
+    // ==========================================================
+    //  EDITABLE CONFIG — Change your data here
+    // ==========================================================
+
+    const CONFIG = {
+        seatingChart: __SEATING_CHART__,
+        scrambleWords: __SCRAMBLE_WORDS__,
+        sportsTrivia: __SPORTS_TRIVIA__,
+        coupleTrivia: __COUPLE_TRIVIA__,
+        codeWords: __CODE_WORDS__,
+        easterEggCodeWord: __EASTER_EGG_CODE_WORD__,
+        connectionsPuzzles: __CONNECTIONS_PUZZLES__,
+        ttalQuestions: __TTAL_QUESTIONS__,
+        overunderQuestions: __OVERUNDER_QUESTIONS__,
+    };
+
     // ========== SCREEN NAVIGATION ==========
     let currentGame = null;
 
@@ -232,10 +635,47 @@ html_content = r'''<!DOCTYPE html>
         document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         updateSeatingBtn();
+        updateHomeButtons();
         if (id === 'puzzle') { currentGame = 'puzzle'; shufflePuzzle(); }
-        if (id === 'memory') { currentGame = 'memory'; initMemory(); }
-        if (id === 'scramble') { currentGame = 'scramble'; newWord(); }
+        if (id === 'trivia-sports') { currentGame = 'trivia-sports'; initTrivia('sports'); }
+        if (id === 'trivia-couple') { currentGame = 'trivia-couple'; initTrivia('couple'); }
+        if (id === 'connections') { currentGame = 'connections'; initConnections(); }
+if (id === 'ttal') { currentGame = 'ttal'; initTTAL(); }
+if (id === 'overunder') { currentGame = 'overunder'; initOU(); }
+if (id === 'scramble') { currentGame = 'scramble'; newWord(); }
+if (id === 'secret') { initSecretPage(); }
     }
+    
+    function getTimesCompleted(game) {
+    if (game === 'trivia-sports') {
+        return Math.floor(parseInt(sessionStorage.getItem('correct_sports') || '0') / 3);
+    }
+    if (game === 'trivia-couple') {
+        return Math.floor(parseInt(sessionStorage.getItem('correct_couple') || '0') / 3);
+    }
+    if (game === 'ttal') {
+        return Math.floor(parseInt(sessionStorage.getItem('correct_ttal') || '0') / 3);
+    }
+    if (game === 'overunder') {
+        return Math.floor(parseInt(sessionStorage.getItem('correct_overunder') || '0') / 3);
+    }
+    return parseInt(sessionStorage.getItem('times_' + game) || '0');
+}
+
+function updateHomeButtons() {
+    ['puzzle', 'connections', 'trivia-sports', 'trivia-couple', 'overunder', 'ttal', 'scramble'].forEach(game => {
+        const btn = document.getElementById('btn-' + game);
+        const info = document.getElementById('info-' + game);
+        const times = getTimesCompleted(game);
+        if (times > 0) {
+            btn.classList.add('completed');
+            info.textContent = '✓ ×' + times;
+        } else {
+            btn.classList.remove('completed');
+            info.textContent = '';
+        }
+    });
+}
 
     function updateSeatingBtn() {
         const btn = document.getElementById('seating-btn');
@@ -258,9 +698,37 @@ html_content = r'''<!DOCTYPE html>
     }
 
     function triggerWin() {
-        sessionStorage.setItem('puzzleWon', 'true');
-        document.getElementById('win-overlay').classList.add('active');
+    const wasAlreadyUnlocked = sessionStorage.getItem('puzzleWon') === 'true';
+    sessionStorage.setItem('puzzleWon', 'true');
+
+    // Track completion counts for round-based games
+    if (['puzzle','scramble','connections'].includes(currentGame)) {
+        const key = 'times_' + currentGame;
+        sessionStorage.setItem(key, (parseInt(sessionStorage.getItem(key) || '0') + 1).toString());
     }
+
+    checkSecretUnlock();
+
+    // Question-based games: skip win screen after first victory
+    if (['trivia-sports','trivia-couple','ttal','overunder'].includes(currentGame) && getTimesCompleted(currentGame) > 1) {
+        if (currentGame === 'trivia-sports' || currentGame === 'trivia-couple') {
+            triviaState.correct = 0; triviaState.idx++; showTriviaQuestion();
+        } else if (currentGame === 'ttal') {
+            ttalState.correct = 0; ttalState.idx++; showTTALQuestion();
+        } else if (currentGame === 'overunder') {
+            ouState.correct = 0; ouState.idx++; showOUQuestion();
+        }
+        return;
+    }
+
+    // Update overlay text
+    const winText = document.getElementById('win-overlay-text');
+    winText.textContent = wasAlreadyUnlocked
+        ? 'Congratulations!'
+        : 'Congratulations! The seating chart is now unlocked.';
+
+    document.getElementById('win-overlay').classList.add('active');
+}
 
     function closeOverlay() {
         document.getElementById('win-overlay').classList.remove('active');
@@ -269,8 +737,12 @@ html_content = r'''<!DOCTYPE html>
     function replayGame() {
         closeOverlay();
         if (currentGame === 'puzzle') shufflePuzzle();
-        if (currentGame === 'memory') initMemory();
+        if (currentGame === 'trivia-sports') initTrivia('sports');
+        if (currentGame === 'trivia-couple') initTrivia('couple');
         if (currentGame === 'scramble') newWord();
+        if (currentGame === 'connections') initConnections();
+if (currentGame === 'ttal') initTTAL();
+if (currentGame === 'overunder') initOU();
     }
 
     // ========== SLIDING PUZZLE ==========
@@ -320,74 +792,188 @@ html_content = r'''<!DOCTYPE html>
         renderPuzzle();
     }
 
-    // ========== MEMORY MATCH ==========
-    const emojis = ['\uD83D\uDC8D','\uD83D\uDC92','\uD83D\uDC70','\uD83E\uDD35','\uD83C\uDF82','\uD83E\uDD42','\uD83C\uDF38','\uD83D\uDC90'];
-    let memCards=[], memFlipped=[], memMatched=0, memMoves=0, memLocked=false;
+    // ========== TRIVIA ENGINE ==========
+const triviaData = {
+    sports: CONFIG.sportsTrivia,
+    couple: CONFIG.coupleTrivia,
+};
 
-    function initMemory() {
-        const deck = [...emojis, ...emojis];
-        for (let i = deck.length-1; i>0; i--) { const j=Math.floor(Math.random()*(i+1)); [deck[i],deck[j]]=[deck[j],deck[i]]; }
-        memCards = deck; memFlipped = []; memMatched = 0; memMoves = 0; memLocked = false;
-        document.getElementById('memory-moves').textContent = 'Moves: 0';
-        renderMemory();
+let triviaState = {};
+
+function getConsecutive(category) {
+    return parseInt(sessionStorage.getItem('trivia_consecutive_' + category) || '0');
+}
+function setConsecutive(category, val) {
+    sessionStorage.setItem('trivia_consecutive_' + category, val.toString());
+    checkSecretUnlock();
+}
+function updateConsecutiveDisplay() {
+    const mapping = [
+        {cat: 'sports', elId: 'trivia-sports-consecutive'},
+        {cat: 'couple', elId: 'trivia-couple-consecutive'},
+        {cat: 'overunder', elId: 'ou-consecutive'},
+    ];
+    mapping.forEach(m => {
+        const el_ = document.getElementById(m.elId);
+        if (el_) el_.innerHTML = '🔥 Consecutive correct: <strong>' + getConsecutive(m.cat) + '</strong>';
+    });
+}
+
+function initTrivia(category) {
+    const pool = [...triviaData[category]];
+    // shuffle pool
+    for (let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+    triviaState = { category, pool, idx:0, correct:0, needed:3, streakCount:0, streakTarget:0, inStreak:false };
+    updateTriviaProgress();
+    showTriviaQuestion();
+}
+
+function el(id) { return document.getElementById(id); }
+function tId(suffix) { return 'trivia-' + triviaState.category + '-' + suffix; }
+
+function updateTriviaProgress() {
+    el(tId('progress')).textContent = 'Correct: ' + triviaState.correct + ' / ' + triviaState.needed;
+}
+
+function showTriviaQuestion() {
+    const s = triviaState;
+    // Hide progress if already beaten this game
+    const alreadyBeaten = getTimesCompleted('trivia-' + s.category) > 0;
+    el(tId('progress')).style.display = alreadyBeaten ? 'none' : '';
+    if (s.correct >= s.needed) { triggerWin(); return; }
+    if (s.idx >= s.pool.length) { s.idx = 0; } // loop if needed
+    const q = s.pool[s.idx];
+    el(tId('feedback')).textContent = '';
+    el(tId('feedback')).className = 'trivia-feedback';
+    el(tId('question')).textContent = q.q;
+    const ansDiv = el(tId('answers'));
+    ansDiv.innerHTML = '';
+
+    if (q.type === 'mc') {
+        s.inStreak = false;
+        q.options.forEach(opt => {
+            const btn = document.createElement('button');
+            btn.className = 'btn btn-small';
+            btn.textContent = opt;
+            btn.onclick = () => handleMC(opt, q.answer);
+            ansDiv.appendChild(btn);
+        });
+    } else if (q.type === 'open') {
+        s.inStreak = false;
+        const input = document.createElement('input');
+        input.type = 'text'; input.className = 'trivia-input';
+        input.placeholder = 'Type your answer...'; input.id = 'trivia-open-input';
+        input.autocomplete = 'off';
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-small'; btn.textContent = 'Submit';
+        btn.style.marginTop = '10px';
+        btn.onclick = () => handleOpen(q.answers);
+        input.addEventListener('keydown', e => { if(e.key==='Enter') handleOpen(q.answers); });
+        ansDiv.appendChild(input);
+        ansDiv.appendChild(btn);
+        setTimeout(() => input.focus(), 100);
+    } else if (q.type === 'streak') {
+        s.inStreak = true; s.streakCount = 0; s.streakTarget = q.needed; s.streakValid = q.valid; s.streakUsed = [];
+        const prompt = document.createElement('div');
+        prompt.className = 'trivia-streak-prompt';
+        prompt.textContent = '0 / ' + q.needed + ' correct';
+        prompt.id = 'streak-prompt';
+        const input = document.createElement('input');
+        input.type = 'text'; input.className = 'trivia-input';
+        input.placeholder = 'Type one answer...'; input.id = 'trivia-streak-input';
+        input.autocomplete = 'off';
+        const btn = document.createElement('button');
+        btn.className = 'btn btn-small'; btn.textContent = 'Submit';
+        btn.style.marginTop = '10px';
+        btn.onclick = () => handleStreak();
+        input.addEventListener('keydown', e => { if(e.key==='Enter') handleStreak(); });
+        ansDiv.appendChild(prompt);
+        ansDiv.appendChild(input);
+        ansDiv.appendChild(btn);
+        setTimeout(() => input.focus(), 100);
     }
 
-    function renderMemory() {
-        const grid = document.getElementById('memory-grid');
-        grid.innerHTML = '';
-        memCards.forEach((emoji, idx) => {
-            const card = document.createElement('div');
-            card.classList.add('card');
-            card.dataset.idx = idx;
-            card.textContent = emoji;
-            if (memFlipped.includes(idx)) card.classList.add('flipped');
-            if (card.classList.contains('matched')) {}
-            card.addEventListener('click', () => flipCard(idx));
-            grid.appendChild(card);
-        });
-        // re-apply matched
-        document.querySelectorAll('.card').forEach(c => {
-            const i = parseInt(c.dataset.idx);
-            if (memFlipped.includes(i) && document.querySelectorAll('.card.matched').length >= 0) {
-                // check matched pairs from memFlipped permanent
-            }
-        });
+    // Skip button (all question types)
+    const skipBtn = document.createElement('button');
+    skipBtn.className = 'btn btn-small';
+    skipBtn.style.background = '#ccc';
+    skipBtn.style.color = '#666';
+    skipBtn.style.marginTop = '8px';
+    skipBtn.textContent = 'Skip';
+    skipBtn.onclick = () => { triviaState.idx++; showTriviaQuestion(); };
+    ansDiv.appendChild(skipBtn);
+
+    updateConsecutiveDisplay();
+}
+
+function handleMC(selected, correct) {
+    const fb = el(tId('feedback'));
+    if (selected === correct) {
+            triviaState.correct++; updateTriviaProgress();
+            const cKey = 'correct_' + triviaState.category;
+            sessionStorage.setItem(cKey, (parseInt(sessionStorage.getItem(cKey) || '0') + 1).toString());
+        fb.textContent = '✓ Correct!'; fb.className = 'trivia-feedback correct';
+        setConsecutive(triviaState.category, getConsecutive(triviaState.category) + 1);
+    } else {
+        fb.textContent = '✗ The answer was ' + correct; fb.className = 'trivia-feedback';
+        setConsecutive(triviaState.category, 0);
     }
+    triviaState.idx++;
+    setTimeout(showTriviaQuestion, 1200);
+}
 
-    let memPermanent = new Set();
+function handleOpen(validAnswers) {
+    const input = document.getElementById('trivia-open-input');
+    const guess = input.value.trim().toLowerCase();
+    const fb = el(tId('feedback'));
+    if (validAnswers.map(a => a.toLowerCase()).includes(guess)) {
+            triviaState.correct++; updateTriviaProgress();
+            const cKey = 'correct_' + triviaState.category;
+            sessionStorage.setItem(cKey, (parseInt(sessionStorage.getItem(cKey) || '0') + 1).toString());
+        fb.textContent = '✓ Correct!'; fb.className = 'trivia-feedback correct';
+        setConsecutive(triviaState.category, getConsecutive(triviaState.category) + 1);
+        triviaState.idx++;
+        setTimeout(showTriviaQuestion, 1200);
+    } else {
+        fb.textContent = 'Not quite — try again!'; fb.className = 'trivia-feedback';
+    }
+}
 
-    function flipCard(idx) {
-        if (memLocked) return;
-        if (memPermanent.has(idx)) return;
-        if (memFlipped.includes(idx)) return;
-        memFlipped.push(idx);
-        const cards = document.querySelectorAll('.card');
-        cards[idx].classList.add('flipped');
-
-        if (memFlipped.length === 2) {
-            memMoves++;
-            document.getElementById('memory-moves').textContent = 'Moves: ' + memMoves;
-            const [a, b] = memFlipped;
-            if (memCards[a] === memCards[b]) {
-                memPermanent.add(a); memPermanent.add(b);
-                cards[a].classList.add('matched'); cards[b].classList.add('matched');
-                memMatched += 2;
-                memFlipped = [];
-                if (memMatched === memCards.length) setTimeout(triggerWin, 400);
-            } else {
-                memLocked = true;
-                setTimeout(() => {
-                    cards[a].classList.remove('flipped');
-                    cards[b].classList.remove('flipped');
-                    memFlipped = [];
-                    memLocked = false;
-                }, 800);
-            }
+function handleStreak() {
+    const input = document.getElementById('trivia-streak-input');
+    const guess = input.value.trim().toLowerCase();
+    const fb = el(tId('feedback'));
+    const s = triviaState;
+    if (s.streakUsed.includes(guess)) {
+        fb.textContent = 'Already used that one!'; fb.className = 'trivia-feedback';
+        input.value = ''; return;
+    }
+    if (s.streakValid.map(v=>v.toLowerCase()).includes(guess)) {
+        s.streakUsed.push(guess); s.streakCount++;
+        document.getElementById('streak-prompt').textContent = s.streakCount + ' / ' + s.streakTarget + ' correct';
+        fb.textContent = '✓ ' + guess; fb.className = 'trivia-feedback correct';
+        input.value = '';
+        if (s.streakCount >= s.streakTarget) {
+                s.correct++; updateTriviaProgress();
+                const cKey = 'correct_' + triviaState.category;
+                sessionStorage.setItem(cKey, (parseInt(sessionStorage.getItem(cKey) || '0') + 1).toString());
+                setConsecutive(triviaState.category, getConsecutive(triviaState.category) + 1);
+                s.idx++;
+            setTimeout(showTriviaQuestion, 1000);
+        } else {
+            setTimeout(() => input.focus(), 100);
         }
+    } else {
+        fb.textContent = '✗ Wrong! Starting this question over.'; fb.className = 'trivia-feedback';
+        setConsecutive(triviaState.category, 0);
+        s.streakCount = 0; s.streakUsed = [];
+        document.getElementById('streak-prompt').textContent = '0 / ' + s.streakTarget + ' correct';
+        input.value = '';
     }
+}
 
     // ========== WORD SCRAMBLE ==========
-    const words = ['BOUQUET','WEDDING','FOREVER','DANCING','ROMANCE','FLOWERS','MARRIED','CHERISH','DEVOTED','PROMISE'];
+    const words = CONFIG.scrambleWords;
     let currentWord = '';
 
     function newWord() {
@@ -412,14 +998,313 @@ html_content = r'''<!DOCTYPE html>
     document.addEventListener('keydown', e => {
         if (e.key === 'Enter' && document.getElementById('scramble').classList.contains('active')) checkGuess();
     });
+    
+    // ========== CONNECTIONS ==========
+let connState = {};
+
+function initConnections() {
+    const puzzles = CONFIG.connectionsPuzzles;
+    const puzzle = puzzles[Math.floor(Math.random() * puzzles.length)];
+    const words = [];
+    puzzle.groups.forEach((g, gi) => {
+        g.words.forEach(w => words.push({word: w, group: gi}));
+    });
+    // Shuffle
+    for (let i = words.length-1; i > 0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [words[i],words[j]] = [words[j],words[i]];
+    }
+    connState = { puzzle, words, solved: [], selected: [] };
+    document.getElementById('conn-feedback').textContent = '';
+    document.getElementById('conn-info').textContent = 'Find 4 groups of 4';
+    renderConnections();
+}
+
+function renderConnections() {
+    // Solved bars
+    const solvedDiv = document.getElementById('conn-solved');
+    solvedDiv.innerHTML = '';
+    connState.solved.forEach(gi => {
+        const g = connState.puzzle.groups[gi];
+        const bar = document.createElement('div');
+        bar.className = 'conn-solved-bar';
+        bar.style.background = g.color;
+        bar.innerHTML = '<div class="conn-cat">' + g.category + '</div><div class="conn-words">' + g.words.join(', ') + '</div>';
+        solvedDiv.appendChild(bar);
+    });
+
+    // Remaining words grid
+    const grid = document.getElementById('conn-grid');
+    grid.innerHTML = '';
+    connState.words.forEach((w, i) => {
+        if (connState.solved.includes(w.group)) return;
+        const tile = document.createElement('div');
+        tile.className = 'conn-tile' + (connState.selected.includes(i) ? ' selected' : '');
+        tile.textContent = w.word;
+        tile.onclick = () => connToggle(i);
+        grid.appendChild(tile);
+    });
+
+    // Submit button state
+    document.getElementById('conn-submit').disabled = connState.selected.length !== 4;
+}
+
+function connToggle(idx) {
+    const si = connState.selected.indexOf(idx);
+    if (si > -1) {
+        connState.selected.splice(si, 1);
+    } else if (connState.selected.length < 4) {
+        connState.selected.push(idx);
+    }
+    renderConnections();
+}
+
+function connDeselect() {
+    connState.selected = [];
+    renderConnections();
+}
+
+function connSubmit() {
+    if (connState.selected.length !== 4) return;
+    const groups = connState.selected.map(i => connState.words[i].group);
+    const fb = document.getElementById('conn-feedback');
+    if (groups.every(g => g === groups[0])) {
+        connState.solved.push(groups[0]);
+        connState.selected = [];
+        fb.textContent = '✓ ' + connState.puzzle.groups[groups[0]].category + '!';
+        fb.className = 'trivia-feedback correct';
+        renderConnections();
+        if (connState.solved.length === 4) setTimeout(triggerWin, 600);
+    } else {
+        fb.textContent = '✗ Not a group — try again';
+        fb.className = 'trivia-feedback';
+        connState.selected = [];
+        renderConnections();
+    }
+}
+        
+        // ========== TWO TRUTHS AND A LIE ==========
+let ttalState = {};
+
+function initTTAL() {
+    const pool = [...CONFIG.ttalQuestions];
+    for (let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+    ttalState = { pool, idx: 0, correct: 0, needed: 3 };
+    updateTTALProgress();
+    showTTALQuestion();
+}
+
+function updateTTALProgress() {
+    const el_ = document.getElementById('ttal-progress');
+    el_.textContent = 'Correct: ' + ttalState.correct + ' / ' + ttalState.needed;
+    el_.style.display = getTimesCompleted('ttal') > 0 ? 'none' : '';
+}
+
+function showTTALQuestion() {
+    if (ttalState.correct >= ttalState.needed) { triggerWin(); return; }
+    if (ttalState.idx >= ttalState.pool.length) ttalState.idx = 0;
+    const q = ttalState.pool[ttalState.idx];
+    const fb = document.getElementById('ttal-feedback');
+    fb.textContent = ''; fb.className = 'trivia-feedback';
+    const div = document.getElementById('ttal-statements');
+    div.innerHTML = '';
+    q.statements.forEach((s, i) => {
+        const btn = document.createElement('div');
+        btn.className = 'ttal-btn';
+        btn.textContent = s;
+        btn.onclick = () => answerTTAL(i, q.lie, div);
+        div.appendChild(btn);
+    });
+    document.getElementById('ttal-skip').style.display = '';
+}
+
+function answerTTAL(picked, lieIdx, div) {
+    const fb = document.getElementById('ttal-feedback');
+    const btns = div.querySelectorAll('.ttal-btn');
+    // Disable all buttons
+    btns.forEach((b, i) => { b.onclick = null; b.style.cursor = 'default'; });
+    document.getElementById('ttal-skip').style.display = 'none';
+
+    if (picked === lieIdx) {
+        btns[picked].classList.add('correct');
+        fb.textContent = '✓ Correct! That was the lie.'; fb.className = 'trivia-feedback correct';
+        ttalState.correct++; updateTTALProgress();
+        const cKey = 'correct_ttal';
+        sessionStorage.setItem(cKey, (parseInt(sessionStorage.getItem(cKey) || '0') + 1).toString());
+    } else {
+        btns[picked].classList.add('wrong');
+        btns[lieIdx].classList.add('reveal');
+        fb.textContent = '✗ Nope! The lie was: "' + ttalState.pool[ttalState.idx].statements[lieIdx] + '"';
+        fb.className = 'trivia-feedback';
+    }
+    ttalState.idx++;
+    setTimeout(showTTALQuestion, 1800);
+}
+
+function skipTTAL() { ttalState.idx++; showTTALQuestion(); }
+
+// ========== OVER / UNDER ==========
+let ouState = {};
+
+function initOU() {
+    const pool = [...CONFIG.overunderQuestions];
+    for (let i=pool.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[pool[i],pool[j]]=[pool[j],pool[i]];}
+    ouState = { pool, idx: 0, correct: 0, needed: 3 };
+    updateOUProgress();
+    showOUQuestion();
+}
+
+function updateOUProgress() {
+    const el_ = document.getElementById('ou-progress');
+    el_.textContent = 'Correct: ' + ouState.correct + ' / ' + ouState.needed;
+    el_.style.display = getTimesCompleted('overunder') > 0 ? 'none' : '';
+}
+
+function showOUQuestion() {
+    if (ouState.correct >= ouState.needed) { triggerWin(); return; }
+    if (ouState.idx >= ouState.pool.length) ouState.idx = 0;
+    const q = ouState.pool[ouState.idx];
+    document.getElementById('ou-question').textContent = q.q;
+    document.getElementById('ou-number').textContent = q.number;
+    document.getElementById('ou-feedback').textContent = '';
+    document.getElementById('ou-feedback').className = 'trivia-feedback';
+    document.getElementById('ou-skip').style.display = '';
+    updateConsecutiveDisplay();
+}
+
+function answerOU(choice) {
+    const q = ouState.pool[ouState.idx];
+    const fb = document.getElementById('ou-feedback');
+    if (choice === q.answer) {
+        fb.textContent = '✓ Correct!'; fb.className = 'trivia-feedback correct';
+        ouState.correct++; updateOUProgress();
+        const cKey = 'correct_overunder';
+        sessionStorage.setItem(cKey, (parseInt(sessionStorage.getItem(cKey) || '0') + 1).toString());
+        setConsecutive('overunder', getConsecutive('overunder') + 1);
+    } else {
+        fb.textContent = '✗ It was ' + q.answer + '!'; fb.className = 'trivia-feedback';
+        setConsecutive('overunder', 0);
+    }
+    document.getElementById('ou-skip').style.display = 'none';
+    ouState.idx++;
+    setTimeout(showOUQuestion, 1200);
+}
+
+function skipOU() { ouState.idx++; showOUQuestion(); }
+    
+    // ========== SECRET PAGE ==========
+let secretEClicks = 0;
+
+function checkSecretUnlock() {
+    if (sessionStorage.getItem('secretUnlocked') === 'true') {
+        showSecretBtn();
+        return;
+    }
+
+    let unlocked = false;
+
+    // a) Second "e" in Peter clicked 5 times
+    if (parseInt(sessionStorage.getItem('secret_e_clicks') || '0') >= 5) unlocked = true;
+
+    // b) Sliding puzzle beaten 10 times
+    if (parseInt(sessionStorage.getItem('times_puzzle') || '0') >= 10) unlocked = true;
+
+    // c) Connections beaten 10 times (same as puzzle)
+    if (parseInt(sessionStorage.getItem('times_connections') || '0') >= 10) unlocked = true;
+
+    // d) Either trivia beaten 30 times
+    if (Math.floor(parseInt(sessionStorage.getItem('correct_sports') || '0') / 3) >= 30) unlocked = true;
+    if (Math.floor(parseInt(sessionStorage.getItem('correct_couple') || '0') / 3) >= 30) unlocked = true;
+
+    // e) Over/Under beaten 30 times (same as trivia)
+    if (Math.floor(parseInt(sessionStorage.getItem('correct_overunder') || '0') / 3) >= 30) unlocked = true;
+
+    // f) Word scramble beaten 50 times
+    if (parseInt(sessionStorage.getItem('times_scramble') || '0') >= 50) unlocked = true;
+
+    // g) Two Truths beaten 50 times (same as scramble)
+    if (Math.floor(parseInt(sessionStorage.getItem('correct_ttal') || '0') / 3) >= 50) unlocked = true;
+
+    // h) Every game beaten at least once
+    const allBeaten =
+        parseInt(sessionStorage.getItem('times_puzzle') || '0') > 0
+        && parseInt(sessionStorage.getItem('times_connections') || '0') > 0
+        && Math.floor(parseInt(sessionStorage.getItem('correct_sports') || '0') / 3) > 0
+        && Math.floor(parseInt(sessionStorage.getItem('correct_couple') || '0') / 3) > 0
+        && Math.floor(parseInt(sessionStorage.getItem('correct_overunder') || '0') / 3) > 0
+        && Math.floor(parseInt(sessionStorage.getItem('correct_ttal') || '0') / 3) > 0
+        && parseInt(sessionStorage.getItem('times_scramble') || '0') > 0;
+    if (allBeaten) unlocked = true;
+
+    // i) Consecutive streak of 50+ on trivia or over/under
+    if (getConsecutive('sports') >= 50) unlocked = true;
+    if (getConsecutive('couple') >= 50) unlocked = true;
+    if (getConsecutive('overunder') >= 50) unlocked = true;
+
+    if (unlocked) {
+        sessionStorage.setItem('secretUnlocked', 'true');
+        sessionStorage.setItem('puzzleWon', 'true');
+        showSecretBtn();
+        document.getElementById('secret-overlay').classList.add('active');
+    }
+}
+
+function showSecretBtn() {
+    const btn = document.getElementById('btn-secret');
+    if (btn) btn.classList.add('visible');
+}
+
+function closeSecretOverlay() {
+    document.getElementById('secret-overlay').classList.remove('active');
+}
+
+function initSecretPage() {
+    let word;
+    if (parseInt(sessionStorage.getItem('secret_e_clicks') || '0') >= 5) {
+        word = CONFIG.easterEggCodeWord;
+    } else {
+        word = CONFIG.codeWords[Math.floor(Math.random() * CONFIG.codeWords.length)];
+    }
+    document.getElementById('secret-code-word').textContent = word;
+}
 
     // ========== INIT ==========
-    updateSeatingBtn();
+// Build seating chart from config
+const stBody = document.querySelector('#seating-table-body tbody');
+CONFIG.seatingChart.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = '<td>' + row.table + '</td><td>' + row.guests + '</td>';
+    stBody.appendChild(tr);
+});
+updateSeatingBtn();
+updateHomeButtons();
+
+// Secret "e" click tracker
+document.getElementById('secret-e').addEventListener('click', function() {
+    const clicks = parseInt(sessionStorage.getItem('secret_e_clicks') || '0') + 1;
+    sessionStorage.setItem('secret_e_clicks', clicks.toString());
+    checkSecretUnlock();
+});
+
+// Show secret button if already unlocked
+if (sessionStorage.getItem('secretUnlocked') === 'true') showSecretBtn();
+
 </script>
 </body>
 </html>'''
 
+output = html_content
+output = output.replace('__SEATING_CHART__', json.dumps(SEATING_CHART))
+output = output.replace('__SCRAMBLE_WORDS__', json.dumps(SCRAMBLE_WORDS))
+output = output.replace('__SPORTS_TRIVIA__', json.dumps(SPORTS_TRIVIA))
+output = output.replace('__COUPLE_TRIVIA__', json.dumps(COUPLE_TRIVIA))
+output = output.replace('__CONNECTIONS_PUZZLES__', json.dumps(CONNECTIONS_PUZZLES))
+output = output.replace('__TTAL_QUESTIONS__', json.dumps(TTAL_QUESTIONS))
+output = output.replace('__OVERUNDER_QUESTIONS__', json.dumps(OVERUNDER_QUESTIONS))
+output = output.replace('__CODE_WORDS__', json.dumps(CODE_WORDS))
+output = output.replace('__EASTER_EGG_CODE_WORD__', json.dumps(EASTER_EGG_CODE_WORD))
+
 with open('index.html', 'w', encoding='utf-8') as f:
-    f.write(html_content)
+    f.write(output)
 
 print('index.html generated successfully!')
