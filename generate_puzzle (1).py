@@ -1,13 +1,3 @@
-#### this is built in spyder "new env". To update, open ananconda prompt, "activate new_env", then proceed
-
-import qrcode
-
-url = "https://zapengler.github.io/Peter_and_Stef_7_11_26/"
-img = qrcode.make(url)
-img.save("ps_qrcode.png")
-
-#### actually build html
-
 html_content = r'''<!DOCTYPE html>
 <html lang="en">
 <head>
