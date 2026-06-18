@@ -21,12 +21,20 @@ import json
 # ==========================================================
 
 SEATING_CHART = [
-    { "table": "1", "guests": "Mom & Dad Kraack, Grandma Kraack, Uncle Jim & Aunt Sue" },
-    { "table": "2", "guests": "Mom & Dad Engler, Grandma Engler, Cousin Mike" },
-    { "table": "3", "guests": "Sarah & Josh, Emily & Dave, Katie & Ryan" },
-    { "table": "4", "guests": "College Crew: Alex, Jordan, Taylor, Morgan" },
-    { "table": "5", "guests": "Work Friends: Pat, Brian, Nolan, Monte" },
-    { "table": "6", "guests": "High School Gang: Chris, Sam, Drew, Jamie" },
+    { "table": "1", "guests": "The Reeds, The Wolfords, Debbie Bonet Ward, Michael Farber" },
+    { "table": "2", "guests": "Ray & Mary Engler, Joe Engler, Heather Hopkins, Joan Decker, Lynn Zirkel" },
+    { "table": "3", "guests": "Howard & Ann Katzoff, Alicia & Derin Kraack, Alex Palmer, Jett Palmer, Tripp Palmer" },
+    { "table": "4", "guests": "Ray & Amy Engler, Dan & Katie Patterson, Gabriel Neill, Liz Kennedy" },
+    { "table": "5", "guests": "Max Whitley, Mary-Frances Burrows, Ro Parko, Willow Watkins, Peyton Scarpacci, Kristen Bauer, Katie DeGrott, Hugh Smith" },
+    { "table": "6", "guests": "Edward Kraack, Ruthanne Luning, Keith & Betty-Jo Garrett, Bill & Elaine Pierpont, Ronnie & Joanne Kraack" },
+    { "table": "7", "guests": "Nkosana & Ashlyn Moyo, Ben Ruiz, Hannah Keister, Kendra Post, Alex Palinski, Cinthia Dubon, Joseph Toft" },
+    { "table": "8", "guests": "Noah Bauer, Amy Effenberger, Amy McKenna, Hunter Larson, Joe Torres, Matt & Katie Capone, Louie Milucky" },
+    { "table": "9", "guests": "Lacey Kraack, Trisha Kraack, Evan & Katherine Kraack, Sarah Campbell, Edgar & Stacey Williams, Caleigh Rugar" },
+    { "table": "10", "guests": "Jason & Wendy Kraack, Dan & Jamie Gallo, Lynn Russell, Boomer & Karen Russell" },
+    { "table": "11", "guests": "Maggie Russell, Rocco Deaveiro, Regan Russell, Kristen Gallo, Evan Herbert, Ethan Gallo, Macie Gallo" },
+    { "table": "12", "guests": "Zaiya Cook, Anthony Hill, Nathaniel Hill, Thomas Kraack, Elena Freeman" },
+    { "table": "13", "guests": "Derek & Hayley Kraack, Aria Kraack, Slater Kraack, Bodhi Kraack, Sunday Kraack, Ford Kraack" },
+    { "table": "14", "guests": "Ryan & Hannah Sayers, Allie Cogswell, Jenna Sayers, Ayden Lowitz, Kylea May, Sophia Feigenbutz, Maureen Lowitz" },
 ]
 
 CODE_WORDS = [
@@ -40,19 +48,25 @@ SCRAMBLE_WORDS = ["BOUQUET","WEDDING","FOREVER","DANCING","ROMANCE","FLOWERS","M
 
 SPORTS_TRIVIA = [
     # ===== SEAHAWKS =====
-    { "type":"mc", "q":"What number did Russell Wilson wear as a Seahawk?", "options":["1","3","7","12"], "answer":"3" },
-    { "type":"mc", "q":"Who coached the Seahawks to their Super Bowl XLVIII victory?", "options":["Mike Holmgren","Pete Carroll","Chuck Knox","Jim Mora"], "answer":"Pete Carroll" },
-    { "type":"mc", "q":"Which team did the Seahawks defeat 43-8 in Super Bowl XLVIII?", "options":["Patriots","Broncos","49ers","Packers"], "answer":"Broncos" },
-    { "type":"open", "q":"What is the nickname for the Seahawks' fanbase?", "answers":["12s","12th man","the 12s","the 12th man"] },
-    { "type":"mc", "q":"Which Seahawk was nicknamed 'Beast Mode'?", "options":["Russell Wilson","Marshawn Lynch","Kam Chancellor","Earl Thomas"], "answer":"Marshawn Lynch" },
-    { "type":"open", "q":"What division do the Seahawks play in?", "answers":["nfc west"] },
-    { "type":"mc", "q":"Which Seahawk made 'The Tip' in the 2013 NFC Championship?", "options":["Richard Sherman","Brandon Browner","Byron Maxwell","Earl Thomas"], "answer":"Richard Sherman" },
+    { "type":"mc", "q":"What is the most famous number retired by the Seahawks?", "options":["1","3","7","12"], "answer":"12" },
+    { "type":"mc", "q":"Who coached the Seahawks to their Super Bowl XLVIII victory?", "options":["Mike Holmgren","Pete Carroll","Chuck Knox","Mike Macdonald"], "answer":"Pete Carroll" },
+    { "type":"mc", "q":"How many games did Seattle win in the 2025 season?", "options":["12","14","17","19"], "answer":"17" },
+    { "type":"open", "q":"Name one Seahawks coordinator since 2024", "answers":["Jay Harbaugh","Harbaugh","Ryan Grubb","Grubb", "Aden Durde", "Durde", "Klint Kubiak", "Kubiak", "Brian Fleury", "Fleury"] },
+    { "type":"mc", "q":"What is the team's record since Peter arrived?", "options":["45-28","40-33","38-35","37-36"], "answer":"45-28" },
+    { "type":"open", "q":"What division do the Seahawks play in?", "answers":["nfc west", "nfcw"] },
+    { "type":"mc", "q":"What is Peter's favorite game he attended?", "options":["2022 Wk 1 vs DEN","2025 Wk 16 vs LA","2025 Div vs SF","2025 SB LX vs NE"], "answer":"2025 Div vs SF" },
     { "type":"mc", "q":"What year were the Seattle Seahawks founded?", "options":["1970","1976","1980","1984"], "answer":"1976" },
-    { "type":"open", "q":"What is the name of the Seahawks' stadium?", "answers":["lumen field","centurylink field"] },
-    { "type":"mc", "q":"Which Seahawk safety was known as 'Bam Bam'?", "options":["Earl Thomas","Kam Chancellor","Quandre Diggs","Jamal Adams"], "answer":"Kam Chancellor" },
-    { "type":"mc", "q":"Who did the Seahawks lose to in Super Bowl XL?", "options":["Colts","Patriots","Steelers","Bears"], "answer":"Steelers" },
-    { "type":"streak", "q":"Name 4 Seahawks players (past or current) without getting one wrong.", "needed":4,
-      "valid":["wilson","lynch","sherman","chancellor","thomas","wagner","lockett","metcalf","dk","largent","alexander","hasselbeck","tatupu","wright","bennett","avril","baldwin","graham","carson","penny","fan","jones","brooks","green","kennedy","easley","warner","krieg","mack","smith","geno","walker","witherspoon","woolen","cross","lucas"],
+    { "type":"open", "q":"What is the name of the Seahawks' stadium?", "answers":["lumen field", "lumen"] },
+    { "type":"mc", "q":"Which of these Seahawks are regularly called by their nickname by the team?", "options":["Chris (Pooh) Paul","Drew (BCL) Lock","Jaxon (Emerald City Route Artist) Smith-Njigba","Michael (Big Balls) Dickson"], "answer":"Chris (Pooh) Paul" },
+    { "type":"mc", "q":"Which of these are real Seahawks nicknames?", "options":["Rylie (Polar Bear) Mills","Byron (Koala Bear) Murphy","Jarran (Big Slime) Reed","Brandon (Big Sick) Pili", "All of the Above"], "answer":"All of the Above" },
+    { "type":"open", "q":"Which team are the Seahawks 8-0 vs since Peter arrived?", "answers":["arizona", "ari", "arz", "cardinals", "arizona cardinals"]},
+    { "type":"streak", "q":"Name 4 Seahawks players (currently on the roster) without getting one wrong. (last name only)", "needed":4,
+      "valid":["darnold", "lock", "milroe", "price", "holani", "wilson", "wright", "jones", "mcintosh", "charbonnet", "ouzts", "russell", "smith-njigba", "kupp", "shaheed", "white",
+               "horton", "foster", "charles", "henderson", "rochelle", "bobo", "barner", "saubert", "arroyo", "kallerup", "bryant", "mason", "sundell", "oluwatimi", "richman", 
+               "maranges", "zabel", "bradford", "haynes", "cabeldue", "stephens", "cross", "lucas", "kight", "jones", "brown", "hart", "reed", "williams", "mills", "morris", "ivey",
+               "singleton", "murphy", "pili", "seumalo", "eastern", "thomas", "lawrence", "nwosu", "fowler", "hall", "sheriff", "hubbard", "o'toole", "jones", "gaines", "thomas", 
+               "jones", "night", "o'connell", "weston", "paul", "surratt", "jobe", "witherspoon", "emmanwori", "pritchett", "igbinoghene", "neal", "jean-charles", "broden", 
+               "dansby", "fuller", "okada", "clark", "hook", "finley", "love", "thomas", "bell", "myers", "dickson", "stoll"],
     },
 
     # ===== ARSENAL =====
