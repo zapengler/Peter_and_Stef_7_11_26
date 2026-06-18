@@ -21,11 +21,11 @@ import json
 # ==========================================================
 
 SEATING_CHART = [
-    { "table": "1", "guests": "The Reeds, The Wolfords, Debbie Bonet Ward, Michael Farber" },
-    { "table": "2", "guests": "Ray & Mary Engler, Joe Engler, Heather Hopkins, Joan Decker, Lynn Zirkel" },
+    { "table": "1", "guests": "Aaron & Lauri Reed, Maya Reed, Ella Reed, Bob & Laura Wolford, Debbie Bonet Ward, Michael Farber" },
+    { "table": "2", "guests": "Ray & Mary Engler, Joe Engler & Heather Hopkins, Joan Decker, Lynn Zirkel" },
     { "table": "3", "guests": "Howard & Ann Katzoff, Alicia & Derin Kraack, Alex Palmer, Jett Palmer, Tripp Palmer" },
     { "table": "4", "guests": "Ray & Amy Engler, Dan & Katie Patterson, Gabriel Neill, Liz Kennedy" },
-    { "table": "5", "guests": "Max Whitley, Mary-Frances Burrows, Ro Parko, Willow Watkins, Peyton Scarpacci, Kristen Bauer, Katie DeGrott, Hugh Smith" },
+    { "table": "5", "guests": "Max Whitley, Mary-Frances Burrows, Ro Parko, Willow Watkins, Peyton Scarpacci, Kristen Bauer, Katie DeGroot, Hugh Smith" },
     { "table": "6", "guests": "Edward Kraack, Ruthanne Luning, Keith & Betty-Jo Garrett, Bill & Elaine Pierpont, Ronnie & Joanne Kraack" },
     { "table": "7", "guests": "Nkosana & Ashlyn Moyo, Ben Ruiz, Hannah Keister, Kendra Post, Alex Palinski, Cinthia Dubon, Joseph Toft" },
     { "table": "8", "guests": "Noah Bauer, Amy Effenberger, Amy McKenna, Hunter Larson, Joe Torres, Matt & Katie Capone, Louie Milucky" },
@@ -34,17 +34,22 @@ SEATING_CHART = [
     { "table": "11", "guests": "Maggie Russell, Rocco Deaveiro, Regan Russell, Kristen Gallo, Evan Herbert, Ethan Gallo, Macie Gallo" },
     { "table": "12", "guests": "Zaiya Cook, Anthony Hill, Nathaniel Hill, Thomas Kraack, Elena Freeman" },
     { "table": "13", "guests": "Derek & Hayley Kraack, Aria Kraack, Slater Kraack, Bodhi Kraack, Sunday Kraack, Ford Kraack" },
-    { "table": "14", "guests": "Ryan & Hannah Sayers, Allie Cogswell, Jenna Sayers, Ayden Lowitz, Kylea May, Sophia Feigenbutz, Maureen Lowitz" },
+    { "table": "14", "guests": "Jenna Sayers, Hannah Sayers, Ryan Sayers & Allie Cogswell, Maureen Lowitz, Ayden Lowitz & Kylea May, Sophia Feigenbutz" },
 ]
 
 CODE_WORDS = [
-    "THUNDERBIRD", "ROYAL FLUSH", "BEAST MODE", "INVINCIBLE",
-    "MOONWALKER", "PEGASUS", "PHOENIX", "GOLDEN SNITCH",
-    "BRAVEHEART", "CHECKMATE", "WILDCARD", "IRON THRONE",
+    "RAYA", "KEPA", "SALIBA", "MOSQUERA",
+    "WHITE", "HINCAPIE", "GABRIEL", "TIMBER",
+    "CALAFIORI", "LEWIS-SKELLY", "ODEGAARD", "EZE",
+    "NORGAARD", "MERINO", "ZUBIMENDI", "RICE", "DOWMAN",
+    "SAKA", "GABRIEL JESUS", "MARTINELLI", "GYOKERES", 
+    "TROSSARD", "MADUEKE", "HAVERTZ"
 ]
-EASTER_EGG_CODE_WORD = "KONAMI"
+EASTER_EGG_CODE_WORD = "HENRY"
 
-SCRAMBLE_WORDS = ["BOUQUET","WEDDING","FOREVER","DANCING","ROMANCE","FLOWERS","MARRIED","CHERISH","DEVOTED","PROMISE"]
+SCRAMBLE_WORDS = ["BOUQUET","WEDDING","AMHERST", "RENTON", "BELMONT", 
+                  "SURVIVOR", "ARSENAL", "CAROLINA", "WASHINGTON", "WINGSPAN",
+                  "MOZZARELLA", "GLUTEN", "PROPOSAL", "CEREMONY", "CARCASSONNE"]
 
 SPORTS_TRIVIA = [
     # ===== SEAHAWKS =====
@@ -351,6 +356,16 @@ html_content = r'''<!DOCTYPE html>
         .hint { color: #888; font-size: 14px; margin: 10px 0 15px; }
         .scramble-feedback { color: #c0392b; font-size: 14px; min-height: 20px; margin-top: 8px; }
 
+        #seating-search {
+    width: 100%; max-width: 400px; padding: 10px 14px;
+    font-size: 14px; border: 2px solid #e8ece6; border-radius: 6px;
+    margin-bottom: 10px; outline: none;
+    font-family: circular, helvetica, sans-serif; color: #21201f;
+}
+#seating-search:focus { border-color: #667D5D; }
+.seating-table tr.hidden { display: none; }
+.seating-table .highlight { background: #fff4c4; }
+                           
         /* --- Seating Chart --- */
         .seating-table {
             width: 100%; border-collapse: collapse; margin: 15px 0;
@@ -587,6 +602,7 @@ html_content = r'''<!DOCTYPE html>
     <button class="back-btn" onclick="showScreen('home')">&larr; Home</button>
     <h2>Seating Chart</h2>
     <p style="color:#666; margin-bottom:15px;">Find your table below!</p>
+    <input type="text" id="seating-search" placeholder="Search for a name..." autocomplete="off">
     <table class="seating-table" id="seating-table-body">
     <thead><tr><th>Table</th><th>Guests</th></tr></thead>
     <tbody></tbody>
@@ -1256,10 +1272,11 @@ function checkSecretUnlock() {
     if (getConsecutive('overunder') >= 50) unlocked = true;
 
     if (unlocked) {
-        sessionStorage.setItem('secretUnlocked', 'true');
-        sessionStorage.setItem('puzzleWon', 'true');
-        showSecretBtn();
-        document.getElementById('secret-overlay').classList.add('active');
+    sessionStorage.setItem('secretUnlocked', 'true');
+    sessionStorage.setItem('puzzleWon', 'true');
+    showSecretBtn();
+    updateSeatingBtn();
+    document.getElementById('secret-overlay').classList.add('active');
     }
 }
 
@@ -1289,6 +1306,30 @@ CONFIG.seatingChart.forEach(row => {
     const tr = document.createElement('tr');
     tr.innerHTML = '<td>' + row.table + '</td><td>' + row.guests + '</td>';
     stBody.appendChild(tr);
+});
+
+// Seating chart search
+document.getElementById('seating-search').addEventListener('input', function() {
+    const query = this.value.trim().toLowerCase();
+    const rows = stBody.querySelectorAll('tr');
+    rows.forEach(tr => {
+        const text = tr.textContent.toLowerCase();
+        if (query === '' || text.includes(query)) {
+            tr.classList.remove('hidden');
+            // Highlight matching guest cell
+            const guestCell = tr.cells[1];
+            const original = guestCell.dataset.original || guestCell.textContent;
+            guestCell.dataset.original = original;
+            if (query !== '') {
+                const regex = new RegExp('(' + query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'gi');
+                guestCell.innerHTML = original.replace(regex, '<span class="highlight">$1</span>');
+            } else {
+                guestCell.textContent = original;
+            }
+        } else {
+            tr.classList.add('hidden');
+        }
+    });
 });
 updateSeatingBtn();
 updateHomeButtons();
