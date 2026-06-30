@@ -21,20 +21,20 @@ import json
 # ==========================================================
 
 SEATING_CHART = [
-    { "table": "1", "guests": "Aaron & Lauri Reed, Maya Reed, Ella Reed, Bob & Laura Wolford, Debbie Bonet Ward, Michael Farber" },
+    { "table": "1", "guests": "Aaron & Lauri Reed, Maya Reed, Ella Reed, Debbie Bonet Ward & Michael Farber" },
     { "table": "2", "guests": "Ray & Mary Engler, Joe Engler & Heather Hopkins, Joan Decker, Lynn Zirkel" },
-    { "table": "3", "guests": "Howard & Ann Katzoff, Alicia & Derin Kraack, Alex Palmer, Jett Palmer, Tripp Palmer" },
-    { "table": "4", "guests": "Ray & Amy Engler, Dan & Katie Patterson, Gabriel Neill, Liz Kennedy" },
-    { "table": "5", "guests": "Max Whitley, Mary-Frances Burrows, Ro Parko, Willow Watkins, Peyton Scarpacci, Kristen Bauer, Katie DeGroot, Hugh Smith" },
-    { "table": "6", "guests": "Edward Kraack, Ruthanne Luning, Keith & Betty-Jo Garrett, Bill & Elaine Pierpont, Ronnie & Joanne Kraack" },
-    { "table": "7", "guests": "Nkosana & Ashlyn Moyo, Ben Ruiz, Hannah Keister, Kendra Post, Alex Palinski, Cinthia Dubon, Joseph Toft" },
-    { "table": "8", "guests": "Noah Bauer, Amy Effenberger, Amy McKenna, Hunter Larson, Joe Torres, Matt & Katie Capone, Louie Milucky" },
-    { "table": "9", "guests": "Lacey Kraack, Trisha Kraack, Evan & Katherine Kraack, Sarah Campbell, Edgar & Stacey Williams, Caleigh Rugar" },
+    { "table": "3", "guests": "Howard & Ann Katzoff, Derin & Alicia Kraack, Brad & Alex Palmer, Jett Palmer, Tripp Palmer" },
+    { "table": "4", "guests": "Ray & Amy Engler, Dan & Katie Patterson, Bob & Laura Wolford, Gabriel Neill & Liz Kennedy" },
+    { "table": "5", "guests": "Max Whitley, Mary-Frances Burrows, Ro Parko, Willow Watkins & Peyton Scarpacci, Kristen Bauer, Katie DeGroot & Hugh Smith" },
+    { "table": "6", "guests": "Edward Kraack & Ruthanne Luning, Keith & Betty-Jo Garrett, Bill & Elaine Pierpont, Ronnie & Joanne Kraack" },
+    { "table": "7", "guests": "Nkosana & Ashlyn Moyo, Ben Ruiz & Hannah Keister, Kendra Post & Alex Palinski, Cinthia Dubon, Joseph Toft" },
+    { "table": "8", "guests": "Noah Bauer & Amy Effenberger, Amy McKenna & Hunter Larson, Joe Torres, Matt & Katie Capone" },
+    { "table": "9", "guests": "Jenna Sayers, Hannah Sayers, Ryan Sayers & Allie Cogswell, Maureen Lowitz" },
     { "table": "10", "guests": "Jason & Wendy Kraack, Dan & Jamie Gallo, Lynn Russell, Boomer & Karen Russell" },
-    { "table": "11", "guests": "Maggie Russell, Rocco Deaveiro, Regan Russell, Kristen Gallo, Evan Herbert, Ethan Gallo, Macie Gallo" },
-    { "table": "12", "guests": "Zaiya Cook, Anthony Hill, Nathaniel Hill, Thomas Kraack, Elena Freeman" },
+    { "table": "11", "guests": "Maggie Russell & Rocco Deaveiro, Regan Russell, Kristen Gallo & Evan Herbert, Ethan Gallo, Macie Gallo" },
+    { "table": "12", "guests": "Lacey Kraack, Trisha Kraack, Evan & Katherine Kraack, Sarah Campbell, Edgar & Stacey Williams, Caleigh Rugar" },
     { "table": "13", "guests": "Derek & Hayley Kraack, Aria Kraack, Slater Kraack, Bodhi Kraack, Sunday Kraack, Ford Kraack" },
-    { "table": "14", "guests": "Jenna Sayers, Hannah Sayers, Ryan Sayers & Allie Cogswell, Maureen Lowitz, Ayden Lowitz & Kylea May, Sophia Feigenbutz" },
+    { "table": "14", "guests": "Zaiya Cook, Anthony Hill, Nathaniel Hill, Thomas Kraack, Elena Freeman" },
 ]
 
 CODE_WORDS = [
@@ -60,6 +60,7 @@ SPORTS_TRIVIA = [
     { "type":"mc", "q":"What is the team's record since Peter arrived?", "options":["45-28","40-33","38-35","37-36"], "answer":"45-28" },
     { "type":"open", "q":"What division do the Seahawks play in?", "answers":["nfc west", "nfcw"] },
     { "type":"mc", "q":"What is Peter's favorite game he attended?", "options":["2022 Wk 1 vs DEN","2025 Wk 16 vs LA","2025 Div vs SF","2025 SB LX vs NE"], "answer":"2025 Div vs SF" },
+    { "type":"mc", "q":"What is Stefanie's favorite game she attended?", "options":["2022 Wk 1 vs DEN","2025 Wk 16 vs LA","2025 Div vs SF","2025 SB LX vs NE"], "answer":"2025 Wk 16 vs LA" },
     { "type":"mc", "q":"What year were the Seattle Seahawks founded?", "options":["1970","1976","1980","1984"], "answer":"1976" },
     { "type":"open", "q":"What is the name of the Seahawks' stadium?", "answers":["lumen field", "lumen"] },
     { "type":"mc", "q":"Which of these Seahawks are regularly called by their nickname by the team?", "options":["Chris (Pooh) Paul","Drew (BCL) Lock","Jaxon (Emerald City Route Artist) Smith-Njigba","Michael (Big Balls) Dickson"], "answer":"Chris (Pooh) Paul" },
@@ -76,16 +77,20 @@ SPORTS_TRIVIA = [
 
     # ===== ARSENAL =====
     { "type":"mc", "q":"What is Arsenal's home stadium?", "options":["Wembley","Stamford Bridge","Emirates Stadium","Etihad Stadium"], "answer":"Emirates Stadium" },
-    { "type":"mc", "q":"Who is Arsenal's all-time leading scorer?", "options":["Dennis Bergkamp","Thierry Henry","Ian Wright","Robin van Persie"], "answer":"Thierry Henry" },
-    { "type":"open", "q":"What is Arsenal's nickname?", "answers":["gunners","the gunners"] },
     { "type":"mc", "q":"In what season did Arsenal go unbeaten in the Premier League?", "options":["2001-02","2003-04","2005-06","2007-08"], "answer":"2003-04" },
     { "type":"mc", "q":"What part of London is Arsenal based in?", "options":["South London","East London","West London","North London"], "answer":"North London" },
-    { "type":"open", "q":"What was Arsenal's stadium before the Emirates?", "answers":["highbury","arsenal stadium"] },
-    { "type":"mc", "q":"Which manager led Arsenal's 'Invincibles' season?", "options":["George Graham","Arsène Wenger","Unai Emery","Mikel Arteta"], "answer":"Arsène Wenger" },
+    { "type":"mc", "q":"When Peter & Stef went to an Arsenal friendly in Charlotte, who did they face?", "options":["Chelsea","Fiorentina","FC Utrecht","AS Roma"], "answer":"Fiorentina" },
+    { "type":"mc", "q":"When Peter & Stef went to an Arsenal friendly in Charlotte, who scored twice?", "options":["Eddie Nketiah", "Gabriel Martinelli", "Henrikh Mkhitaryan", "Alexandre Lacazette"], "answer":"Eddie Nketiah" },
+    { "type":"open", "q":"Which Arsenal manager is famed for his long coat?", "answers":["Arsène Wenger", "Wenger"] },
     { "type":"mc", "q":"What is Arsenal's rivalry with Tottenham called?", "options":["Manchester Derby","Merseyside Derby","North London Derby","London Derby"], "answer":"North London Derby" },
-    { "type":"mc", "q":"What color is Arsenal's traditional home shirt?", "options":["Blue","Red","Yellow","Green"], "answer":"Red" },
-    { "type":"streak", "q":"Name 3 Arsenal players (past or current) without getting one wrong.", "needed":3,
-      "valid":["henry","bergkamp","wright","vieira","pires","adams","saka","odegaard","saliba","rice","havertz","ramsdale","martinelli","nketiah","arteta","ozil","sanchez","fabregas","van persie","walcott","giroud","koscielny","mertesacker","cazorla","wilshere","ramsey","aubameyang","lacazette","lehmann","seaman","campbell","ljungberg","petit","overmars","parlour","keown","dixon","winterburn","smith","rocastle","brady","george"],
+    { "type":"mc", "q":"Which Arsenal player recently set the EPL record for youngest scorer at 15?", "options":["Marli Salmon","Ainsley Maitland-Niles","Rob Holding","Max Dowman"], "answer":"Max Dowman" },
+    { "type":"streak", "q":"Name 3 current Arsenal players without getting one wrong.", "needed":3,
+      "valid":["RAYA", "KEPA", "SALIBA", "MOSQUERA",
+      "WHITE", "HINCAPIE", "GABRIEL", "TIMBER",
+      "CALAFIORI", "LEWIS-SKELLY", "ODEGAARD", "EZE",
+      "NORGAARD", "MERINO", "ZUBIMENDI", "RICE", "DOWMAN",
+      "SAKA", "GABRIEL JESUS", "MARTINELLI", "GYOKERES", 
+      "TROSSARD", "MADUEKE", "HAVERTZ"],
     },
 
     # ===== NFL GENERAL =====
